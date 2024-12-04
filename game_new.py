@@ -45,7 +45,7 @@ def login_page():
                 st.session_state["username"] = username
                 st.session_state["wallet"] = int(user.iloc[0]["wallet"])
                 st.success(f"Welcome back, {username}!")
-                st.experimental_rerun()
+                st.session_state["current_page"] = "Game"
             else:
                 st.error("Invalid username or password. Please try again.")
         except Exception as e:
@@ -67,7 +67,7 @@ def register_page():
             users = pd.concat([users, new_user], ignore_index=True)
             save_users(users)
             st.success("Registration successful! Please log in.")
-            #st.experimental_rerun()
+            st.session_state["current_page"] = "Login"
 
 # Game Page
 def game_page():
@@ -83,8 +83,7 @@ def game_page():
             users.loc[users["username"] == st.session_state["username"], "wallet"] = st.session_state["wallet"]
             save_users(users)
             st.success(f"Wallet recharged! Current balance: {st.session_state['wallet']}")
-            st.experimental_rerun()
-        return
+            return
 
     # Game logic
     def play_game(choice):
@@ -121,14 +120,15 @@ def game_page():
     if st.button("Logout"):
         del st.session_state["username"]
         del st.session_state["wallet"]
-        st.experimental_rerun()
+        st.session_state["current_page"] = "Login"
 
 # Main logic
-if "username" not in st.session_state:
-    page = st.sidebar.selectbox("Choose an option", ["Login", "Register"])
-    if page == "Login":
-        login_page()
-    elif page == "Register":
-        register_page()
-else:
+if "current_page" not in st.session_state:
+    st.session_state["current_page"] = "Login"
+
+if st.session_state["current_page"] == "Login":
+    login_page()
+elif st.session_state["current_page"] == "Register":
+    register_page()
+elif st.session_state["current_page"] == "Game":
     game_page()
