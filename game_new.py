@@ -122,13 +122,13 @@ def game_page():
         del st.session_state["wallet"]
         st.session_state["current_page"] = "Login"
 
-# Main logic
-if "current_page" not in st.session_state:
-    st.session_state["current_page"] = "Login"
 
-if st.session_state["current_page"] == "Login":
-    login_page()
-elif st.session_state["current_page"] == "Register":
-    register_page()
-elif st.session_state["current_page"] == "Game":
+# Main logic
+if "username" not in st.session_state:
+    page = st.sidebar.selectbox("Choose an option", ["Login", "Register"])
+    if page == "Login":
+        login_page()
+    elif page == "Register":
+        register_page()
+else:
     game_page()
