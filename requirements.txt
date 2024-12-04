@@ -1,4 +1,2 @@
-streamlit
-pandas
-random
-os
+streamlit==1.21.0
+pandas==2.1.0
